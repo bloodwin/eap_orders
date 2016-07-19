@@ -1,7 +1,7 @@
-Name: E-AutoPay Orders;
+﻿Name: E-AutoPay Orders;
 Version: 1.0;
-Description: Дополнение для Wp-Recall, позволяющее работать с заказами из E-AutoPay ;
+Description: Дополнение для Wp-Recall, позволяющее работать с заказами из E-AutoPay;
 Support Core: 10.0.0;
 Author: Блудвина Анна;
-Author Uri: bloodwin.ru;
-Add-on Uri: github.com/bloodwin/eap_orders;
+Author Uri: http://bloodwin.ru;
+Add-on Uri: https://github.com/bloodwin/eap_orders;

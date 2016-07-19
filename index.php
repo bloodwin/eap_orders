@@ -3,18 +3,18 @@
 if (!session_id()) { session_start(); }
 
 require_once("functions.php");
-require_once("functions/ajax-func.php");
+#require_once("functions/ajax-func.php");
 
 if(is_admin()):
     require_once("admin-pages.php");
 else:
-    require_once("functions/shortcodes.php");
+#    require_once("functions/shortcodes.php");
     add_action('rcl_enqueue_scripts','rcl_eap_scripts',10);
 endif;
 
 function rcl_eap_scripts(){
-         rcl_enqueue_style('orders',rcl_addon_url('style.css', __FILE__));
-         rcl_enqueue_script('orders', rcl_addon_url('js/scripts.js', __FILE__) );
+         rcl_enqueue_style('eap_orders', rcl_addon_url('style.css', __FILE__));
+         rcl_enqueue_script('eap_orders', rcl_addon_url('js/scripts.js', __FILE__) );
 }
 function eap_global_unit(){
     if(defined('EAP_PREF')) return false;

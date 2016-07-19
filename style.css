@@ -1,0 +1,5 @@
+/* Личный кабинет для E-Autopay*/
+
+#tab-eap_orders > div > table > tbody > tr:nth-child(3) > td {
+   font-size: 1vw; /*0.7% of viewport width */
+}
