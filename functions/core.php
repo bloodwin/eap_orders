@@ -168,8 +168,8 @@ function eap_get_orders($args){
 
     if(isset($args['order_id'])) $wheres[] = "eap_order_id IN ('".$args['order_id']."')";
     if(isset($args['user_id'])) $wheres[] = "user_id='".$args['user_id']."'";
-    if(isset($args['order_status'])) $wheres[] = "status='".$args['order_status']."'";
-    if(isset($args['status_not_in'])) $wheres[] = "status NOT IN ('".$args['status_not_in']."')";
+    if(isset($args['order_status'])) $wheres[] = "order_status='".$args['order_status']."'";
+    if(isset($args['status_not_in'])) $wheres[] = "order_status NOT IN ('".$args['status_not_in']."')";
     if(isset($args['product_id'])) $wheres[] = "eap_good_id IN ('".$args['product_id']."')";
     if(isset($args['year'])) $date[] = $args['year'];
     if(isset($args['month'])) $date[] = $args['month'];
@@ -189,9 +189,9 @@ function eap_get_orders($args){
     
     if(!isset($args['count'])){
         $eap_orderby = (isset($args['orderby']))? "ORDER BY ".$args['orderby']:"ORDER BY ID";
-        $eap_order = (isset($args['order']))? $args['order']:"DESC";
+        $eap_sql_order = (isset($args['order']))? $args['order']:"DESC";
 
-        $sql .= " FROM ($orders_history) as oh GROUP BY oh.eap_order_id $eap_orderby $eap_order";
+        $sql .= " FROM ($orders_history) as oh GROUP BY oh.eap_order_id $eap_orderby $eap_sql_order";
 
         if(isset($args['per_page'])){
 
@@ -202,10 +202,9 @@ function eap_get_orders($args){
         }
     }else{
         //если считаем
-        $sql .= "FROM ($orders_history)";
+        $sql .= "FROM ($orders_history) as oh";
         return $wpdb->get_var($sql);
     }
-
     $ids = $wpdb->get_col($sql);
     
     if(!$ids) return false;
@@ -215,7 +214,7 @@ function eap_get_orders($args){
     if(!$rdrs) return false;
 
     foreach($rdrs as $rd){
-        $eap_orders[$rd->order_id][] = $rd;
+        $eap_orders[$rd->eap_order_id][] = $rd;
     }
 
     return $eap_orders;
@@ -239,6 +238,30 @@ function eap_update_status_order($eap_order_id,$status,$user_id=false){
     do_action('eap_update_status_order',$eap_order_id,$status);
     return $wpdb->update( EAP_PREF ."orders", array( 'order_status' => $status), $args );
 }
+
+function eap_get_chart_orders($eap_orders){
+    global $eap_order,$chartData,$chartArgs;
+
+    if(!$eap_orders) return false;
+
+    $chartArgs = array();
+    $chartData = array(
+        'title' => __('Finance','wp-recall'),
+        'title-x' => __('Period of time','wp-recall'),
+        'data'=>array(
+            array('"'.__('Days/Months','wp-recall').'"', '"'.__('Payments (pcs.)','wp-recall').'"', '"'.__('Income (tsd.)','wp-recall').'"')
+        )
+    );
+
+    foreach($eap_orders as $eap_order){
+        //rcl_setup_orderdata($order);
+        //rcl_setup_chartdata($eap_order->order_date,$eap_order->order_price);
+        rcl_setup_chartdata($eap_order->created,$eap_order->order_status_date,$eap_order->order_price);
+    }
+
+    return rcl_get_chart($chartArgs);
+}
+
 
 //Формирование массива данных заказа
 function eap_setup_orderdata($orderdata){
@@ -288,6 +311,8 @@ function eap_setup_orderdata($orderdata){
         'products'=>array()
     );
 
+    $count = 0;
+
     foreach($orderdata as $data){ 
         eap_setup_productdata($data);
         
@@ -315,8 +340,10 @@ function eap_setup_orderdata($orderdata){
         $eap_order->order_price += $eap_product->summ_price;
         $eap_order->items_count += $eap_product->items_count;
         $eap_order->products[] = $eap_product;
+        $count++;
     } 
 
+    vardump($eap_order, "EAP_Order: ");
     return $eap_order;
 }
 function eap_setup_productdata($productdata){
@@ -334,18 +361,18 @@ function eap_setup_productdata($productdata){
         'product_name'=>0,
         'permalink'=>false
     );
+    
+        $eap_product->product_id = $productdata->eap_good_id;
+        $eap_product->product_price = $productdata->eap_cost;
+        $eap_product->summ_price = $productdata->eap_cost*$productdata->quantity;
+        $eap_product->items_count = $productdata->quantity;
+        $eap_product->user_id = $productdata->user_id;
+        $eap_product->order_id = $productdata->eap_order_id;
+        $eap_product->created = $productdata->created;
+        $eap_product->order_status = $productdata->order_status;
+        $eap_product->product_name = $productdata->good_name;
+        $eap_product->permalink = $productdata->permalink;
 
-
-    $eap_product->product_id = $productdata->eap_good_id;
-    $eap_product->product_price = $productdata->eap_cost;
-    $eap_product->summ_price = $productdata->eap_cost*$productdata->quantity;
-    $eap_product->items_count = $productdata->quantity;
-    $eap_product->user_id = $productdata->user_id;
-    $eap_product->order_id = $productdata->eap_order_id;
-    $eap_product->created = $productdata->created;
-    $eap_product->order_status = $productdata->order_status;
-    $eap_product->product_name = $productdata->good_name;
-    $eap_product->permalink = $productdata->permalink;
 
     return $eap_product;
 }

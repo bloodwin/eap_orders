@@ -38,8 +38,9 @@ class Eap_Orders_History_Table extends WP_List_Table {
         echo '.wp-list-table .column-order_author { width: 25%; }';
         echo '.wp-list-table .column-items_count { width: 10%; }';
         echo '.wp-list-table .column-order_price { width: 10%;}';
-        echo '.wp-list-table .column-order_status { width: 30%;}';
-        echo '.wp-list-table .column-order_date { width: 15%;}';
+        echo '.wp-list-table .column-order_status { width: 15%;}';
+        echo '.wp-list-table .column-created_date { width: 15%;}';
+        echo '.wp-list-table .column-status_date { width: 15%;}';
         echo '</style>';
     }
 
@@ -59,8 +60,10 @@ class Eap_Orders_History_Table extends WP_List_Table {
                 return $item->order_price;
             case 'order_status':
                 return $item->order_status;
-            case 'order_date':
-                return $item->order_date;
+            case 'created_date':
+                return $item->created;
+            case 'status_date':
+                return $item->order_status_date;
             default:
                 return print_r( $item, true ) ;
         }
@@ -74,7 +77,8 @@ class Eap_Orders_History_Table extends WP_List_Table {
             'items_count' => __( 'Number products', 'wp-recall' ),
             'order_price'    => __( 'Order sum', 'wp-recall' ),
             'order_status'    => __( 'Status', 'wp-recall' ),
-            'order_date'      => __( 'Date', 'wp-recall' )
+            'created_date'      => __( 'Created', 'wp-recall' ),
+            'status_date'      => __( 'Status changed', 'wp-recall' )
         );
          return $columns;
     }
@@ -183,9 +187,9 @@ class Eap_Orders_History_Table extends WP_List_Table {
         global $wpdb,$wp_locale;
 
         $months = $wpdb->get_results("
-                SELECT DISTINCT YEAR( order_date ) AS year, MONTH( order_date ) AS month
-                FROM ".EAP_PREF ."orders_history
-                ORDER BY order_date DESC
+                SELECT DISTINCT YEAR( created ) AS year, MONTH( created ) AS month
+                FROM ".EAP_PREF ."orders
+                ORDER BY created DESC
         ");
 
         $months = apply_filters( 'months_dropdown_results', $months, $post_type );
@@ -293,9 +297,12 @@ class Eap_Orders_History_Table extends WP_List_Table {
         
         $this->total_items = eap_get_orders($args);
         
-        foreach($orders as $order_id=>$order){ 
-            eap_setup_orderdata($order);
-            $items[] = $order;
+        foreach($orders as $order_id=>$orderfull){
+            $orderdata = eap_get_order($order_id);
+            vardump($orderdata, "ORDERDATA: ");
+
+            $order = eap_setup_orderdata($orderdata);
+            $items[$order_id] = $order;
         }
 
         return $items;
@@ -329,7 +336,8 @@ function eap_orders_page_options() {
 }
 
 function eap_admin_orders_page(){
-  global $Eap_Orders;
+    global $Eap_Orders;
+
   
   $Eap_Orders->prepare_items();
 

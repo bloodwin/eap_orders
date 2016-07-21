@@ -4,7 +4,7 @@ include_once 'orders-history.php';
 function wp_eap_orders_options_panel(){
     add_menu_page('EAP Orders', 'EAP Orders', 'manage_options', 'manage-eap', 'eap_manage_orders');
     $hook = add_submenu_page( 'manage-eap', __('Orders','wp-recall'), __('Orders','wp-recall'), 'manage_options', 'manage-eap', 'eap_manage_orders');
-        add_action( "load-$hook", 'rcl_eap_orders_page_options' );
+        add_action( "load-$hook", 'eap_orders_page_options' );
     add_submenu_page( 'manage-eap', __('Export/Import','wp-recall'), __('Export/Import','wp-recall'), 'manage_options', 'manage-eap-price', 'eap_export');
     add_submenu_page( 'manage-eap', __('Store settings','wp-recall'), __('Store settings','wp-recall'), 'manage_options', 'manage-eap-options', 'eap_global_options');
 }

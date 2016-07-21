@@ -1,5 +1,12 @@
 <?php
 
+function vardump($var,$metka) {
+    if ($metka) echo "$metka: <br\>\n";
+    echo '<pre>';
+    var_dump($var);
+    echo '</pre>';
+}
+
 if (!session_id()) { session_start(); }
 
 require_once("functions.php");
