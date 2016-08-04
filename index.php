@@ -1,21 +1,12 @@
 <?php
 
-function vardump($var,$metka) {
-    if ($metka) echo "$metka: <br\>\n";
-    echo '<pre>';
-    var_dump($var);
-    echo '</pre>';
-}
-
 if (!session_id()) { session_start(); }
 
 require_once("functions.php");
-#require_once("functions/ajax-func.php");
 
 if(is_admin()):
     require_once("admin-pages.php");
 else:
-#    require_once("functions/shortcodes.php");
     add_action('rcl_enqueue_scripts','rcl_eap_scripts',10);
 endif;
 
@@ -23,6 +14,7 @@ function rcl_eap_scripts(){
          rcl_enqueue_style('eap_orders', rcl_addon_url('style.css', __FILE__));
          rcl_enqueue_script('eap_orders', rcl_addon_url('js/scripts.js', __FILE__) );
 }
+
 function eap_global_unit(){
     if(defined('EAP_PREF')) return false;
     global $wpdb,$eap_options,$user_ID;
@@ -30,9 +22,10 @@ function eap_global_unit(){
     if(!isset($_SESSION['return_'.$user_ID]))
             $_SESSION['return_'.$user_ID] = (isset($_SERVER['HTTP_REFERER']))? $_SERVER['HTTP_REFERER']: '/';
 
-    $rmag_options = get_option('primary-eap-options');
+    $eap_options = get_option('primary-eap-options');
     define('EAP_PREF', $wpdb->prefix."eap_");
 }
+
 add_action('init','eap_global_unit',10);
 
 add_action('init','eap_tab_orders');
@@ -42,7 +35,7 @@ function eap_tab_orders(){
 }
 
 function eap_orders_func($author_lk){
-    global $wpdb,$user_ID,$rcl_options,$eap_order;
+    global $wpdb,$user_ID,$rcl_options;
 
     if($user_ID!=$author_lk) return false;
 
@@ -70,12 +63,9 @@ function eap_orders_func($author_lk){
                 $block .= '<div class="redirectform"></div>';
 
         $block .= rcl_get_include_template('order.php',__FILE__);
-
+        
     }else{
 
-        global $eap_orders;
-
-        #$eap_orders = eap_get_orders(array('user_id'=>$user_ID,'status_not_in'=>6));
         $eap_orders = eap_get_orders(array('user_id'=>$user_ID));
 
         if(!$eap_orders) $block .= '<p>У вас пока не оформлено ни одного заказа.</p>';

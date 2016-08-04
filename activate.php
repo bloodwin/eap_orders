@@ -20,8 +20,8 @@ $table = EAP_PREF ."orders";
 $sql = "CREATE TABLE IF NOT EXISTS ". $table . " (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `user_id` int(11) NOT NULL,
-        `eap_order_id` int(11) DEFAULT NULL,
-        `order_status` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+        `order_id` int(11) DEFAULT NULL,
+        `status` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
         `status_date` datetime DEFAULT NULL COMMENT 'last change date',
         `confirmed` enum('0','1') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
         `first_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -36,7 +36,7 @@ $sql = "CREATE TABLE IF NOT EXISTS ". $table . " (
         `phone` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
         `created` datetime DEFAULT NULL,
         `currency` varchar(6) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        `amount` decimal(7,2) DEFAULT NULL,
+        `total_price` decimal(7,2) DEFAULT NULL,
         `delivery_cost` decimal(7,2) DEFAULT NULL,
         `notes` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
         `logist_comment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -44,7 +44,7 @@ $sql = "CREATE TABLE IF NOT EXISTS ". $table . " (
         PRIMARY KEY (`id`),
         UNIQUE KEY `id_UNIQUE` (`id`),
         KEY `fk_orders_users1_idx` (`user_id`),
-        KEY `eap_order_id_idx` (`eap_order_id`)
+        KEY `order_id_idx` (`order_id`)
     ) $collate;";
 
 dbDelta( $sql );
@@ -52,26 +52,26 @@ dbDelta( $sql );
 $table = EAP_PREF ."baskets";
 $sql = "CREATE TABLE IF NOT EXISTS ". $table . " (
         `id` int(11) NOT NULL AUTO_INCREMENT,
-        `eap_order_id` int(11) NOT NULL,
-        `eap_good_id` int(11) NOT NULL,
-        `eap_cost` decimal(7,2) DEFAULT NULL,
-        `quantity` int(11) NOT NULL,
+        `order_id` int(11) NOT NULL,
+        `product_id` int(11) NOT NULL,
+        `cost` decimal(7,2) DEFAULT NULL,
+        `amount` int(11) NOT NULL,
         PRIMARY KEY (`id`),
         UNIQUE KEY `id_UNIQUE` (`id`),
-        KEY `eap_order_id_idx` (`eap_order_id`)
+        KEY `eap_order_id_idx` (`order_id`)
       ) $collate;";
 
 dbDelta( $sql );
 
-$table = EAP_PREF ."goods";
+$table = EAP_PREF ."products";
 $sql = "CREATE TABLE IF NOT EXISTS ". $table . " (
         `id` int(11) NOT NULL AUTO_INCREMENT,
-        `eap_good_id` int(11) NOT NULL,
-        `good_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+        `product_id` int(11) NOT NULL,
+        `product_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
         `permalink` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
         PRIMARY KEY (`id`),
         UNIQUE KEY `id_UNIQUE` (`id`),
-        KEY `eap_good_id_idx` (`eap_good_id`)
+        KEY `product_id_idx` (`product_id`)
       ) $collate;";
 
 dbDelta( $sql );
