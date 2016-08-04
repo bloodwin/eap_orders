@@ -17,6 +17,7 @@ class Eap_Order {
     private $notes = '';
     private $logist_comment = '';
     private $author_comment = '';
+    private $basket = array();
     
     public function __construct($user_id){
         $this->user_id = $user_id;
@@ -46,11 +47,11 @@ class Eap_Order {
        
         $query = "SELECT * FROM ".$prefix."orders WHERE order_id=?";
         $stmt = $db->prepare($query);
-        $result = $stmt->execute( array($odrer_id) );
+        $result = $stmt->execute( array($order_id) );
                 
         if (empty ($result)) { return null; }
         
-        $row = $result->fetch();)
+        $row = $result->fetch();
         $basket = Eap_Eap_Product_Basket_String::getBasketFull($order_id, $db, $prefix);
         /** @todo Обработка исключения если корзина пустая */
         $order = new Eap_Order($row->user_id);
@@ -66,11 +67,8 @@ class Eap_Order {
         $order->notes = $row->notes;
         $order->logist_comment = $row->logist_comment;
         $order->author_comment = $row->author_comment;
-        $order->userdata = new Eap_User($row->user_id, $row->first_name,
-                                        $row->last_name, $row->otchestvo,
-                                        $row->zip_code, $row->country,
-                                        $row->state, $row->city,
-                                        $row->address, $row->email, $row->phone0);        
+        $order->userdata = Eap_User::initUser($row);        
+        $order->basket = $basket;
         
         return $order;
     }

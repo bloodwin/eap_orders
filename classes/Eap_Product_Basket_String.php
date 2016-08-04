@@ -10,12 +10,11 @@ class Eap_Product_Basket_String extends Eap_Product {
     public function __construct($product_id, $name, $permalink, $order_id, $product_price) {
         parent::__construct($product_id, $name, $permalink);
         $this->order_id = $order_id;
-        $this->product = $product;
         $this->product_price = $product_price;
     }        
     
     public function setProductAmount($amount) {
-        $this->product_amount = $amountproduct_price;
+        $this->product_amount = $amount;
         $this->product_total = $this->product_price * $this->product_amount;
     } 
     
@@ -32,7 +31,7 @@ class Eap_Product_Basket_String extends Eap_Product {
         return $this->product_price;
     }
     
-    public function getProductAmount() {
+    public function getProductTotalPrice() {
         return $this->product_total;    
     }
     
@@ -55,7 +54,7 @@ class Eap_Product_Basket_String extends Eap_Product {
         
         $query = "SELECT * FROM ".$prefix."baskets WHERE order_id=?";
         $stmt = $db->prepare($query);
-        $result = $stmt->execute( array($odrer_id) );
+        $result = $stmt->execute( array($order_id) );
                 
         if (empty ($result)) { return null; }
         

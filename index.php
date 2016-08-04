@@ -16,12 +16,13 @@ function rcl_eap_scripts(){
 }
 
 function eap_global_unit(){
-    if(defined('EAP_PREF')) return false;
+    if(defined('EAP_PREF')) { return false; }
     global $wpdb,$eap_options,$user_ID;
 
-    if(!isset($_SESSION['return_'.$user_ID]))
+    if(!isset($_SESSION['return_'.$user_ID])) {
             $_SESSION['return_'.$user_ID] = (isset($_SERVER['HTTP_REFERER']))? $_SERVER['HTTP_REFERER']: '/';
-
+    }
+    
     $eap_options = get_option('primary-eap-options');
     define('EAP_PREF', $wpdb->prefix."eap_");
 }
