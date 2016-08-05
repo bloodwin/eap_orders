@@ -45,8 +45,8 @@ function eap_orders_func($author_lk){
     if(isset($_GET['order-id'])){
 
         $eap_order = Eap_Order::getInstance($_GET['order-id'], $wpdb,  EAP_PREF);
-
-        if ($eap_order->order_author != $user_ID) { return false; }
+        
+        if ($eap_order->getUserId() != $user_ID) { return false; }
 
         $eap_order_id = $eap_order->getOrderId();
 

@@ -20,13 +20,14 @@ class Eap_User {
 
     public static function initUser ($data) {
         if (isset($data->user_id)) {
-        $user = new Eap_User($data->user_id);
+            $user = new Eap_User($data->user_id);
             unset($data->user_id);
             foreach ($data as $key => $value) {
                 if (property_exists('Eap_User', $key)) {
                     $user->$key = $value;
-                }
+                }   
             }
+            return $user;
         } else {
             return null;
         }
