@@ -38,14 +38,13 @@ class Eap_Product {
     */
     
     public static function getInstance($id, $db, $prefix) {
-        $query = "SELECT * FROM ".$prefix."products WHERE product_id=?";
-        $stmt = $db->prepare($query);
-        $result = $stmt->execute( array($id) );
-        $row = $result->fetch();
+        $query = "SELECT * FROM ".$prefix."products WHERE product_id=%d";
+        $sql = $db->prepare($query, $id);
+        $row = $db->get_row($sql);
         
         if (empty ($row)) { return null; }
         
-        $product = new Eap_Product($row->product_id, $row->product_name, $row->premalink);
+        $product = new Eap_Product($row->product_id, $row->product_name, $row->permalink);
         return $product;
     }
 }

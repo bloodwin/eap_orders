@@ -18,23 +18,26 @@ function vardump($var,$metka) {
     echo '</pre>';
 }
 
+/**
 $classesDir = __DIR__ . "/classes/";
 $extension = ".php";
 spl_autoload_register(
     function($className) use ($classesDir, $extension) {	
         $normalizedClass = str_replace('..', '', $className);	
         $fileName = $normalizedClass;	
-        $fileName = str_replace('_', '/', $fileName);	
+        //$fileName = str_replace('_', '/', $fileName);	
         $fileName = $classesDir . $fileName . $extension;	
         if (!file_exists($fileName)) {	
-            die('<b>Autoload fatal error:</b> Cannot find class file!');
+            die("<b>Autoload fatal error:</b> Cannot find class $fileName file!");
         }	
         require_once $fileName;	
         if (!class_exists($normalizedClass)) {	
             die('<b>Autoload fatal error:</b> Class file included, but class not found.');	
         }
 });
+ */
 
+include_once 'classes/include_classes.php';
 include_once 'functions/core.php';
 include_once 'functions/init.php';
 

@@ -36,7 +36,7 @@ class Eap_Product_Basket_String extends Eap_Product {
     }
     
     public function getBasketLine() {
-        $line =  "$this->getProductName() ";
+        $line  = $this->getProductName()." ";
         $line .= "$this->product_price ";
         $line .= "$this->product_amount ";
         $line .= "$this->product_total";
@@ -62,18 +62,18 @@ class Eap_Product_Basket_String extends Eap_Product {
         
         $basket = array();        
         
-        $query = "SELECT * FROM ".$prefix."baskets WHERE order_id=?";
-        $stmt = $db->prepare($query);
-        $result = $stmt->execute( array($order_id) );
+        $query = "SELECT * FROM ".$prefix."baskets WHERE order_id=%d";
+        $sql = $db->prepare($query, $order_id);
+        $result = $db->get_results($sql);
                 
         if (empty ($result)) { return null; }
         
-        foreach ($result->fetch() as $row) {
+        foreach ($result as $row) {
             $product = Eap_Product::getInstance($row->product_id, $db, $prefix);
             /** @todo Обработка исключения если продукта нет в таблице */
-            $basket_string = new Eap_Product_Basket_String ($product->getProductId,
-                                                            $product->getProductName,
-                                                            $product->getPermalink,
+            $basket_string = new Eap_Product_Basket_String ($product->getProductId(),
+                                                            $product->getProductName(),
+                                                            $product->getPermalink(),
                                                             $row->order_id,
                                                             $row->cost);
             $basket_string->setProductAmount($row->amount);

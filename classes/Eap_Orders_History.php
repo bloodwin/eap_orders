@@ -6,16 +6,16 @@ class Eap_Orders_History {
     private $user_id = 0;
     
     public static function getHistoryByUserID($user_id, $db, $prefix) {
-        $query = "SELECT DISTINCT(order_id) FROM ".$prefix."orders WHERE user_id=?";
-        $stmt = $db->prepare($query);
-        $result = $stmt->execute( array($user_id) );
-        
+        $query = "SELECT DISTINCT(order_id) FROM ".$prefix."orders WHERE user_id=%d";
+        $sql = $db->prepare($query, $user_id);
+        $result = $db->get_results($sql);
+
         if (empty ($result)) { return null; }
         
         $orders_history = array();
         
-        foreach ($result->fetch() as $row) {
-            $order = Eap_Order::getInstance($row['order_id'], $db, $prefix);
+        foreach ($result as $row) {
+            $order = Eap_Order::getInstance($row->order_id, $db, $prefix);
             array_push($orders_history, $order);
         }
         
@@ -24,14 +24,13 @@ class Eap_Orders_History {
     
     public static function getFullHistory($db, $prefix) {
         $query = "SELECT DISTINCT(order_id) FROM ".$prefix."orders";
-        $stmt = $db->prepare($query);
-        $result = $stmt->execute();
+        $result = $db->query($query);
         
         if (empty ($result)) { return null; }
         
         $orders_history = array();
         
-        foreach ($result->fetch() as $row) {
+        foreach ($result as $row) {
             $order = Eap_Order::getInstance($row['order_id'], $db, $prefix);
             array_push($orders_history, $order);
         }
@@ -40,9 +39,8 @@ class Eap_Orders_History {
     }
     
     public static function isExistsUserOrders ($user_id, $db, $prefix) {
-        $query = "SELECT DISTINCT(order_id) FROM ".$prefix."orders WHERE user_id=?";
-        $stmt = $db->prepare($query);
-        $result = $stmt->execute( array($user_id) );
+        $query = "SELECT DISTINCT(order_id) FROM ".$prefix."orders WHERE user_id=$user_id";
+        $result = $db->query($query);
         
         if (empty ($result)) { 
             return false;

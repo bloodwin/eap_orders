@@ -62,9 +62,11 @@ function eap_orders_func($author_lk){
 
         $test = Eap_Orders_History::isExistsUserOrders($user_ID, $wpdb, EAP_PREF);
 
-        if(!$test) $block .= '<p>У вас пока не оформлено ни одного заказа.</p>';
-        else $block .= rcl_get_include_template('orders-history.php',__FILE__);
-
+        if(!$test) { 
+            $block .= '<p>У вас пока не оформлено ни одного заказа.</p>';
+        } else { 
+            $block .= rcl_get_include_template('orders-history.php',__FILE__);
+        }
     }
 
     return $block;

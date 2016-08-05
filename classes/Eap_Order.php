@@ -45,14 +45,14 @@ class Eap_Order {
     
     public static function getInstance($order_id, $db, $prefix) {
        
-        $query = "SELECT * FROM ".$prefix."orders WHERE order_id=?";
-        $stmt = $db->prepare($query);
-        $result = $stmt->execute( array($order_id) );
+        $query = "SELECT * FROM ".$prefix."orders WHERE order_id=%d";
+        $sql = $db->prepare($query, $order_id);
+        $result = $db->get_row($sql);
                 
         if (empty ($result)) { return null; }
         
-        $row = $result->fetch();
-        $basket = Eap_Eap_Product_Basket_String::getBasketFull($order_id, $db, $prefix);
+        $row = $result;
+        $basket = Eap_Product_Basket_String::getBasketFull($order_id, $db, $prefix);
         /** @todo Обработка исключения если корзина пустая */
         $order = new Eap_Order($row->user_id);
         $order->order_id = $row->order_id;
