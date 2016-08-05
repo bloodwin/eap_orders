@@ -24,14 +24,14 @@ class Eap_Orders_History {
     
     public static function getFullHistory($db, $prefix) {
         $query = "SELECT DISTINCT(order_id) FROM ".$prefix."orders";
-        $result = $db->query($query);
+        $result = $db->get_results($query);
         
         if (empty ($result)) { return null; }
         
         $orders_history = array();
         
         foreach ($result as $row) {
-            $order = Eap_Order::getInstance($row['order_id'], $db, $prefix);
+            $order = Eap_Order::getInstance($row->order_id, $db, $prefix);
             array_push($orders_history, $order);
         }
         
@@ -39,8 +39,9 @@ class Eap_Orders_History {
     }
     
     public static function isExistsUserOrders ($user_id, $db, $prefix) {
-        $query = "SELECT DISTINCT(order_id) FROM ".$prefix."orders WHERE user_id=$user_id";
-        $result = $db->query($query);
+        $query = "SELECT DISTINCT(order_id) FROM ".$prefix."orders WHERE user_id=%d";
+        $sql = $db->prepare($query, $user_id);
+        $result = $db->get_row($sql);
         
         if (empty ($result)) { 
             return false;

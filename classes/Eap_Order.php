@@ -18,6 +18,7 @@ class Eap_Order {
     private $logist_comment = '';
     private $author_comment = '';
     private $basket = array();
+    private $total_amount = 0;
     
     public function __construct($user_id){
         $this->user_id = $user_id;
@@ -55,6 +56,7 @@ class Eap_Order {
         $basket = Eap_Product_Basket_String::getBasketFull($order_id, $db, $prefix);
         /** @todo Обработка исключения если корзина пустая */
         $order = new Eap_Order($row->user_id);
+        $order->total_amount = array_shift($basket);
         $order->order_id = $row->order_id;
         $order->id = $row->id;
         $order->status = $row->status;
@@ -124,7 +126,11 @@ class Eap_Order {
     function getAuthorComment() {
         return $this->author_comment;
     }
-
+    
+    function getTotalAmount() {
+        return $this->total_amount;
+    }
+    
     function getBasket() {
         return $this->basket;
     }
@@ -188,6 +194,10 @@ class Eap_Order {
 
     function setAuthorComment($author_comment) {
         $this->author_comment = $author_comment;
+    }
+    
+    function setTotalAmount($amount) {
+        $this->total_amount = $amount;
     }
 
     function setBasket(array $basket) {

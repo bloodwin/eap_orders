@@ -68,6 +68,8 @@ class Eap_Product_Basket_String extends Eap_Product {
                 
         if (empty ($result)) { return null; }
         
+        $total_count = 0;
+        
         foreach ($result as $row) {
             $product = Eap_Product::getInstance($row->product_id, $db, $prefix);
             /** @todo Обработка исключения если продукта нет в таблице */
@@ -77,8 +79,11 @@ class Eap_Product_Basket_String extends Eap_Product {
                                                             $row->order_id,
                                                             $row->cost);
             $basket_string->setProductAmount($row->amount);
+            $total_count += $row->amount;
             array_push($basket, $basket_string);
         }        
+        
+        array_unshift($basket, $total_count);
         
         return $basket;
     }

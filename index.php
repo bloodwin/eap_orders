@@ -51,11 +51,8 @@ function eap_orders_func($author_lk){
         $eap_order_id = $eap_order->getOrderId();
 
         $block .= '<a class="recall-button view-orders" href="'.rcl_format_url(get_author_posts_url($author_lk),'eap_orders').'">Смотреть все заказы</a>';
-
         $block .= '<h3>Заказ №'.$eap_order_id.'</h3>';
-
         $block .= '<div class="redirectform"></div>';
-
         $block .= rcl_get_include_template('order.php',__FILE__);
         
     }else{

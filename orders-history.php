@@ -48,22 +48,22 @@ class Eap_Orders_History_Table extends WP_List_Table {
         _e( 'No orders found.', 'wp-recall' );
     }
 
-    function column_default( $item, $column_name ) {
+    function column_default(Eap_Order $item, $column_name ) {
         switch( $column_name ) { 
             case 'order_id':
-                return $item->order_id;
+                return $item->getOrderId();
             case 'order_author':
-                return $item->order_author.': '.get_the_author_meta('user_login',$item->order_author);
+                return $item->getUserId().': '.get_the_author_meta('user_login',$item->getUserId());
             case 'items_count':
-                return $item->items_count;
+                return $item->getTotalAmount();
             case 'order_price':
-                return $item->order_price;
+                return $item->getTotalPrice();
             case 'order_status':
-                return $item->order_status;
+                return $item->getStatus();
             case 'created_date':
-                return $item->created;
+                return $item->getCreated();
             case 'status_date':
-                return $item->order_status_date;
+                return $item->getStatusDate();
             default:
                 return print_r( $item, true ) ;
         }
@@ -71,26 +71,26 @@ class Eap_Orders_History_Table extends WP_List_Table {
 
     function get_columns(){
         $columns = array(
-            'cb'        => '<input type="checkbox" />',
-            'order_id' => __( 'Order ID', 'wp-recall' ),
-            'order_author' => __( 'Users', 'wp-recall' ),
-            'items_count' => __( 'Number products', 'wp-recall' ),
-            'order_price'    => __( 'Order sum', 'wp-recall' ),
-            'order_status'    => __( 'Status', 'wp-recall' ),
-            'created_date'      => __( 'Created', 'wp-recall' ),
-            'status_date'      => __( 'Status changed', 'wp-recall' )
+            'cb'            => '<input type="checkbox" />',
+            'order_id'      => __('Order ID', 'wp-recall'),
+            'order_author'  => __('Users', 'wp-recall'),
+            'items_count'   => __('Number products', 'wp-recall'),
+            'order_price'   => __('Order sum', 'wp-recall'),
+            'order_status'  => __('Status', 'wp-recall'),
+            'created_date'  => __('Created', 'wp-recall'),
+            'status_date'   => __('Status changed', 'wp-recall')
         );
-         return $columns;
+        return $columns;
     }
     
-    function column_order_id($item){
+    function column_order_id(Eap_Order $item){
       $actions = array(
-            'order-details'    => sprintf('<a href="?page=%s&action=%s&order=%s">'.__( 'Details', 'wp-recall' ).'</a>',$_REQUEST['page'],'order-details',$item->order_id),
+            'order-details'    => sprintf('<a href="?page=%s&action=%s&order=%s">'.__( 'Details', 'wp-recall' ).'</a>',$_REQUEST['page'],'order-details',$item->getOrderId()),
         );
-      return sprintf('%1$s %2$s', $item->order_id, $this->row_actions($actions) );
+      return sprintf('%1$s %2$s', $item->getOrderId(), $this->row_actions($actions) );
     }
 
-    function column_order_status($item){
+    function column_order_status(Eap_Order $item){
         $status = array(
               1 =>'new',
               2 =>'confirmed',
@@ -113,7 +113,7 @@ class Eap_Orders_History_Table extends WP_List_Table {
               19=>'notice1',
               20=>'notice2'
           );
-/*
+/**
 "new"   Новый
 "confirmed" Подтвержден оператором
 "sent"  Отправлен клиенту
@@ -136,39 +136,39 @@ class Eap_Orders_History_Table extends WP_List_Table {
 "notice2"   Напоминание 2
 */
         $actions = array(
-            'new'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'New', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',1,$item->order_id),
-            'confirmed'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Confirmed', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',2,$item->order_id),          
-            'sent'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Sent', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',3,$item->order_id),
-            'cancelled'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Cancelled', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',4,$item->order_id),
-            'in_hands_paid'  => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'In_hands_paid', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',5,$item->order_id),
-            'unconfirmed'   => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Unconfirmed', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',6,$item->order_id),
-            'delayed'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Delayed', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',7,$item->order_id),
-            'refused'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Refused', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',8,$item->order_id),          
-            'delivered_unpaid'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Delivered_unpaid', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',9,$item->order_id),
-            'ready_for_delivery'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Ready_for_delivery', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',10,$item->order_id),
-            'problem'  => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Problem', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',11,$item->order_id),
-            'delivered_paid'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Delivered_paid', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',12,$item->order_id),
-            'pending'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Pending', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',13,$item->order_id),          
-            'specified'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Specified', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',14,$item->order_id),
-            'in_hands_unpaid'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'In_hands_unpaid', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',15,$item->order_id),
-            'wanted'  => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Wanted', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',16,$item->order_id),
-            'absence'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Absence', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',17,$item->order_id),
-            'returned'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Returned', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',18,$item->order_id),          
-            'notice1'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Notice1', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',19,$item->order_id),
-            'notice2'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Notice2', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',20,$item->order_id),
-            'delete'  => sprintf('<a href="?page=%s&action=%s&order=%s">'.__( 'Delete', 'wp-recall' ).'</a>',$_REQUEST['page'],'delete',$item->order_id),
+            'new'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'New', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',1,$item->getOrderId()),
+            'confirmed'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Confirmed', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',2,$item->getOrderId()),          
+            'sent'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Sent', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',3,$item->getOrderId()),
+            'cancelled'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Cancelled', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',4,$item->getOrderId()),
+            'in_hands_paid'  => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'In_hands_paid', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',5,$item->getOrderId()),
+            'unconfirmed'   => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Unconfirmed', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',6,$item->getOrderId()),
+            'delayed'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Delayed', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',7,$item->getOrderId()),
+            'refused'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Refused', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',8,$item->getOrderId()),          
+            'delivered_unpaid'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Delivered_unpaid', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',9,$item->getOrderId()),
+            'ready_for_delivery'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Ready_for_delivery', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',10,$item->getOrderId()),
+            'problem'  => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Problem', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',11,$item->getOrderId()),
+            'delivered_paid'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Delivered_paid', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',12,$item->getOrderId()),
+            'pending'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Pending', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',13,$item->getOrderId()),          
+            'specified'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Specified', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',14,$item->getOrderId()),
+            'in_hands_unpaid'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'In_hands_unpaid', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',15,$item->getOrderId()),
+            'wanted'  => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Wanted', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',16,$item->getOrderId()),
+            'absence'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Absence', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',17,$item->getOrderId()),
+            'returned'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Returned', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',18,$item->getOrderId()),          
+            'notice1'    => sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Notice1', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',19,$item->getOrderId()),
+            'notice2'=> sprintf('<a href="?page=%s&action=%s&status=%s&order=%s">'.__( 'Notice2', 'wp-recall' ).'</a>',$_REQUEST['page'],'update_status',20,$item->getOrderId()),
+            'delete'  => sprintf('<a href="?page=%s&action=%s&order=%s">'.__( 'Delete', 'wp-recall' ).'</a>',$_REQUEST['page'],'delete',$item->getOrderId()),
           );
 
-        unset($actions[$status[$item->order_status]]);
+        unset($actions[$status[$item->getStatus()]]);
       
-        return sprintf('%1$s %2$s', $item->order_status, $this->row_actions($actions) );
+        return sprintf('%1$s %2$s', $item->getStatus(), $this->row_actions($actions) );
     }
     
-    function column_order_author($item){
+    function column_order_author(Eap_Order $item){
       $actions = array(
-            'all-orders'    => sprintf('<a href="?page=%s&action=%s&user=%s">'.__( 'Get user orders', 'wp-recall' ).'</a>',$_REQUEST['page'],'all-orders',$item->order_author),
+            'all-orders'    => sprintf('<a href="?page=%s&action=%s&user=%s">'.__( 'Get user orders', 'wp-recall' ).'</a>',$_REQUEST['page'],'all-orders',$item->getUserId()),
         );
-      return sprintf('%1$s %2$s', $item->order_author.': '.get_the_author_meta('user_login',$item->order_author), $this->row_actions($actions) );
+      return sprintf('%1$s %2$s', $item->getUserId().': '.get_the_author_meta('user_login',$item->getUserId()), $this->row_actions($actions) );
     }
 
     function get_bulk_actions() {
@@ -177,9 +177,9 @@ class Eap_Orders_History_Table extends WP_List_Table {
       return $actions;
     }
 
-    function column_cb($item) {
+    function column_cb(Eap_Order $item) {
         return sprintf(
-            '<input type="checkbox" name="orders[]" value="%s" />', $item->order_id
+            '<input type="checkbox" name="orders[]" value="%s" />', $item->getOrderId()
         );    
     }
     
@@ -261,7 +261,7 @@ class Eap_Orders_History_Table extends WP_List_Table {
 
     function get_data(){
         
-        global $eap_order,$eap_product,$wpdb;
+        global $wpdb;
 
         $args = array();
 
@@ -291,7 +291,7 @@ class Eap_Orders_History_Table extends WP_List_Table {
         
         $orders = eap_get_orders($args);
         
-        if(!$orders) return false;
+        if(!$orders) { return false; }
         
         $args['count'] = 1;
         
