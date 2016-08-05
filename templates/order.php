@@ -2,21 +2,24 @@
 	/*Шаблон для отображения содержимого отдельного заказа,
 	/*Данный шаблон можно разместить в папке используемого шаблона /wp-content/wp-recall/templates/ и он будет подключаться оттуда*/
 ?>
-<?php global $eap_order,$eap_product; ?>
+<?php 
+    global $wpdb;
+    $eap_order = Eap_Order::getInstance($_GET['order-id'], $wpdb, EAP_PREF); 
+?>
 <div id="cart-form" class="cart-data">
 	<table bordercolor="сссссс" border="1" cellpadding="5" class="order-data">
         <tr>
             <th colspan="4">Данные получателя</th> 
         </tr>
         <tr>
-            <td colspan="4"><?php eap_order_fio(); ?></td> 
+            <td colspan="4"><?php $eap_order->userdata->getFIO(); ?></td> 
         </tr>
         <tr>
-        <td colspan="4"><?php eap_order_address(); ?></td> 
+        <td colspan="4"><?php $eap_order->userdata->getFullAddress(); ?></td> 
         </tr>
         <tr>
-            <td colspan="2"><?php eap_order_email(); ?></td> 
-            <td colspan="2"><?php eap_order_phone(); ?></td> 
+            <td colspan="2"><?php $eap_order->userdata->getEmail(); ?></td> 
+            <td colspan="2"><?php $eap_order->userdata->getPhone(); ?></td> 
         </tr>
         <tr>
             <th colspan="4">Данные заказа</th> 
@@ -28,10 +31,10 @@
             <th>Комментарий</th> 
         </tr>
         <tr>
-            <td><?php eap_order_date(); ?></td> 
-            <td><?php eap_order_status(); ?></td> 
-            <td><?php eap_order_status_date(); ?></td> 
-            <td><?php eap_order_user_comment(); ?></td> 
+            <td><?php $eap_order->getCreated(); ?></td> 
+            <td><?php $eap_order->getStatus(); ?></td> 
+            <td><?php $eap_order->getStatusDate(); ?></td> 
+            <td><?php $eap_order->getAuthorComment(); ?></td> 
         </tr>
         <tr>
             <th colspan="4">Состав заказа</th> 
@@ -42,14 +45,15 @@
 			<th class="product-number">Количество</th>
 			<th width="70">Сумма</th>
         </tr>
-		<?php foreach($eap_order->products as $eap_product): ?>
-			<tr id="product-<?php eap_product_ID; ?>">
+		<?php   $basket = $eap_order->getBasket();
+                        foreach($basket as $line): ?>
+			<tr id="product-<?php $line->getProductId(); ?>">
 				<td>
-                    <a href="<?php eap_product_permalink(); ?>"><?php eap_product_title(); ?></a>
+                    <a href="<?php $line->getPermalink(); ?>"><?php $line->getProductName(); ?></a>
                 </td>
-				<td><?php eap_product_price(); ?></td>
-				<td align="center" data-product="<?php eap_product_ID; ?>">
-					<span class="number-product"><?php eap_product_number(); ?></span>
+				<td><?php $line->getProductPrice(); ?></td>
+				<td align="center" data-product="<?php $line->getProductId(); ?>">
+					<span class="number-product"><?php $line->getProductAmount(); ?></span>
 				</td>
 				<td class="sumprice-product"><?php eap_product_summ(); ?></td>
 			</tr>

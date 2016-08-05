@@ -9,7 +9,7 @@ class Eap_Order {
     private $status = '';
     private $status_date = '';
     private $confurmed = 0;
-    private $userdata; /** Объект Eap_User */
+    public  $userdata; /** Объект Eap_User */
     private $created = null;
     private $currency;
     private $total_price = 0;
@@ -73,4 +73,119 @@ class Eap_Order {
         return $order;
     }
 
+    function getUserId() {
+        return $this->user_id;
+    }
+
+    function getOrderId() {
+        return $this->order_id;
+    }
+
+    function getStatus() {
+        return $this->status;
+    }
+
+    function getStatusDate() {
+        return $this->status_date;
+    }
+
+    function getConfurmed() {
+        return $this->confurmed;
+    }
+
+    function getUserdata() {
+        return $this->userdata;
+    }
+
+    function getCreated() {
+        return $this->created;
+    }
+
+    function getCurrency() {
+        return $this->currency;
+    }
+
+    function getTotalPrice() {
+        return $this->total_price;
+    }
+
+    function getDeliveryCost() {
+        return $this->delivery_cost;
+    }
+
+    function getNotes() {
+        return $this->notes;
+    }
+
+    function getLogistComment() {
+        return $this->logist_comment;
+    }
+
+    function getAuthorComment() {
+        return $this->author_comment;
+    }
+
+    function getBasket() {
+        return $this->basket;
+    }
+
+    function setUserId($user_id) {
+        $this->user_id = $user_id;
+    }
+
+    function setOrderId($order_id) {
+        $this->order_id = $order_id;
+    }
+
+    function setStatus($status) {
+        $this->status = $status;
+    }
+
+    function setStatusDate($status_date) {
+        $this->status_date = $status_date;
+    }
+
+    function setConfurmed($confurmed) {
+        $this->confurmed = $confurmed;
+    }
+
+    function setUserdata(Eap_User $userdata) {
+        $this->userdata = $userdata;
+    }
+
+    function setCreated($created) {
+        $this->created = $created;
+    }
+
+    function setCurrency($currency) {
+        $this->currency = $currency;
+    }
+
+    function setTotalPrice($total_price) {
+        $this->total_price = $total_price;
+    }
+
+    function setDeliveryCost($delivery_cost) {
+        $this->delivery_cost = $delivery_cost;
+    }
+
+    function setNotes($notes) {
+        $this->notes = $notes;
+    }
+
+    function setLogistComment($logist_comment) {
+        $this->logist_comment = $logist_comment;
+    }
+
+    function setAuthorComment($author_comment) {
+        $this->author_comment = $author_comment;
+    }
+
+    function setBasket(array $basket) {
+        /** @todo Проверить, что $basket является массивом объектов типа Eap_Product_Basket_String */
+        $this->basket = $basket;
+    }
+
+
+    
 }

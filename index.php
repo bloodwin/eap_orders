@@ -38,38 +38,31 @@ function eap_tab_orders(){
 function eap_orders_func($author_lk){
     global $wpdb,$user_ID,$rcl_options;
 
-    if($user_ID!=$author_lk) return false;
+    if($user_ID!=$author_lk) { return false; }
 
-        $block = apply_filters('content_order_tab','');
+    $block = apply_filters('content_order_tab','');
 
     if(isset($_GET['order-id'])){
 
-                $eap_order = eap_get_order($_GET['order-id']);
+        $eap_order = Eap_Order::getInstance($_GET['order-id'], $wpdb,  EAP_PREF);
 
-                if($eap_order->order_author!=$user_ID) return false;
+        if ($eap_order->order_author != $user_ID) { return false; }
 
-                $status = $eap_order->order_status;
-                $eap_order_id = $eap_order->order_id;
-                $price = $eap_order->order_price;
+        $eap_order_id = $eap_order->getOrderId();
 
-                $block .= '<a class="recall-button view-orders" href="'.rcl_format_url(get_author_posts_url($author_lk),'eap_orders').'">Смотреть все заказы</a>';
+        $block .= '<a class="recall-button view-orders" href="'.rcl_format_url(get_author_posts_url($author_lk),'eap_orders').'">Смотреть все заказы</a>';
 
-                $block .= '<h3>Заказ №'.$eap_order_id.'</h3>';
+        $block .= '<h3>Заказ №'.$eap_order_id.'</h3>';
 
-                $postdata = rcl_encode_post(array(
-                    'callback'=>'rcl_trash_order',
-                    'order_id'=>$eap_order_id
-                ));
-
-                $block .= '<div class="redirectform"></div>';
+        $block .= '<div class="redirectform"></div>';
 
         $block .= rcl_get_include_template('order.php',__FILE__);
         
     }else{
 
-        $eap_orders = eap_get_orders(array('user_id'=>$user_ID));
+        $test = Eap_Orders_History::isExistsUserOrders($user_ID, $wpdb, EAP_PREF);
 
-        if(!$eap_orders) $block .= '<p>У вас пока не оформлено ни одного заказа.</p>';
+        if(!$test) $block .= '<p>У вас пока не оформлено ни одного заказа.</p>';
         else $block .= rcl_get_include_template('orders-history.php',__FILE__);
 
     }

@@ -31,4 +31,26 @@ class Eap_User {
             return null;
         }
     }
+    
+    public function getFIO() {
+        $fio = "$this->last_name $this->first_name $this->otchestvo";
+        return $fio;
+    }
+    
+    public function getFullAddress() {
+        $address = "$this->zip_code <br />\n";
+        $address .= "$this->country <br />\n";
+        $address .= "$this->state <br />\n";
+        $address .= "$this->city <br />\n";
+        $address .= "$this->address <br />\n";
+        return $address;
+    } 
+    
+    public function getEmail() {
+        return $this->email;
+    }
+    
+    public function getPhone() {
+        return $this->phone;
+    }
 }
