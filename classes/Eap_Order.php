@@ -128,7 +128,16 @@ class Eap_Order {
     function getBasket() {
         return $this->basket;
     }
-
+    
+    function getBasketString() {
+        if (!isset($this->basket)) { return null; }
+        $basket = '';
+        foreach ($this->basket as $line) {
+            $basket .= $line->getBasketLine();
+        }
+        return $basket;
+    }
+    
     function setUserId($user_id) {
         $this->user_id = $user_id;
     }

@@ -35,6 +35,16 @@ class Eap_Product_Basket_String extends Eap_Product {
         return $this->product_total;    
     }
     
+    public function getBasketLine() {
+        $line =  "$this->getProductName() ";
+        $line .= "$this->product_price ";
+        $line .= "$this->product_amount ";
+        $line .= "$this->product_total";
+        $line .= "<br />\n";
+        return $line;
+    }
+
+
     /**
     *   Получение данных полной корзины заказа из БД
     *   

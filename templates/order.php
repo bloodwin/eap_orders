@@ -55,13 +55,13 @@
 				<td align="center" data-product="<?php $line->getProductId(); ?>">
 					<span class="number-product"><?php $line->getProductAmount(); ?></span>
 				</td>
-				<td class="sumprice-product"><?php eap_product_summ(); ?></td>
+				<td class="sumprice-product"><?php $line->getProductTotalPrice(); ?></td>
 			</tr>
 		<?php endforeach; ?>
 		<tr>
 			<th colspan="2"></th>
 			<th>Общая сумма</th>
-			<th class="cart-summa"><?php eap_order_price(); ?></th>
+                        <th class="cart-summa"><?php $eap_order->getTotalPrice(); ?></th>
 		</tr>
 	</table>
 </div>
