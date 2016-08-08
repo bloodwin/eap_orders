@@ -17,7 +17,7 @@ class Eap_Order {
     private $notes = '';
     private $logist_comment = '';
     private $author_comment = '';
-    private $basket = array();
+    private $basket; /** Объект Eap_Basket */
     private $total_amount = 0;
     
     public function __construct($user_id){
@@ -53,10 +53,10 @@ class Eap_Order {
         if (empty ($result)) { return null; }
         
         $row = $result;
-        $basket = Eap_Product_Basket_String::getBasketFull($order_id, $db, $prefix);
+        $basket = Eap_Basket::getBasketFull($order_id, $db, $prefix);
         /** @todo Обработка исключения если корзина пустая */
         $order = new Eap_Order($row->user_id);
-        $order->total_amount = array_shift($basket);
+        $order->total_amount = $basket->getTotalCount();
         $order->order_id = $row->order_id;
         $order->id = $row->id;
         $order->status = $row->status;
@@ -135,15 +135,6 @@ class Eap_Order {
         return $this->basket;
     }
     
-    function getBasketString() {
-        if (!isset($this->basket)) { return null; }
-        $basket = '';
-        foreach ($this->basket as $line) {
-            $basket .= $line->getBasketLine();
-        }
-        return $basket;
-    }
-    
     function setUserId($user_id) {
         $this->user_id = $user_id;
     }
@@ -200,11 +191,4 @@ class Eap_Order {
         $this->total_amount = $amount;
     }
 
-    function setBasket(array $basket) {
-        /** @todo Проверить, что $basket является массивом объектов типа Eap_Product_Basket_String */
-        $this->basket = $basket;
-    }
-
-
-    
 }

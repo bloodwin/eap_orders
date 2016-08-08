@@ -48,7 +48,8 @@
             <th class="product-number">Количество</th>
             <th width="70">Сумма</th>
         </tr>
-        <?php   $basket = $eap_order->getBasket();
+        <?php   $basket_full = $eap_order->getBasket();
+                $basket = $basket_full->getBasket();
                 foreach ($basket as $line):
         ?>
             <tr id="product-<?php echo $line->getProductId(); ?>">
