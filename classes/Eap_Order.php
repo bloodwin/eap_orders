@@ -2,23 +2,23 @@
 
 class Eap_Order {
     
-    private $user_id = 0;
-    private $is_error = 0;
-    private $order_id = 0; /** Получаем от E-AutoPay */
-    private $id = 0; /** ID в нашей таблице заказов */
-    private $status = '';
-    private $status_date = '';
-    private $confurmed = 0;
-    public  $userdata; /** Объект Eap_User */
-    private $created = null;
-    private $currency;
-    private $total_price = 0;
-    private $delivery_cost = 0;
-    private $notes = '';
-    private $logist_comment = '';
-    private $author_comment = '';
-    private $basket; /** Объект Eap_Basket */
-    private $total_amount = 0;
+    public $user_id = 0;
+    public $is_error = 0;
+    public $order_id = 0; /** Получаем от E-AutoPay */
+    public $id = 0; /** ID в нашей таблице заказов */
+    public $status = '';
+    public $status_date = '';
+    public $confurmed = 0;
+    public $userdata; /** Объект Eap_User */
+    public $created = null;
+    public $currency;
+    public $total_price = 0;
+    public $delivery_cost = 0;
+    public $notes = '';
+    public $logist_comment = '';
+    public $author_comment = '';
+    public $basket; /** Объект Eap_Basket */
+    public $total_amount = 0;
     
     public function __construct($user_id){
         $this->user_id = $user_id;

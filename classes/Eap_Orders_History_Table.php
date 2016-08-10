@@ -217,8 +217,7 @@ class Eap_Orders_History_Table extends WP_List_Table {
             
 	}
     }    
-
-    
+   
     function get_data(){
         
         global $wpdb;
