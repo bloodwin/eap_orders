@@ -7,7 +7,6 @@
 <?php
     global $wpdb;
     $eap_order = Eap_Order::getInstance($_GET['order-id'], $wpdb, EAP_PREF);
-    vardump ($eap_order, "TEST USERDATA");
 ?>
 <div id="cart-form" class="cart-data">
     <table bordercolor="сссссс" border="1" cellpadding="5" class="order-data">
