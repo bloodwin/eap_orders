@@ -188,6 +188,37 @@ class Eap_Orders_History_Table extends WP_List_Table {
         </select>
     <?php }
     
+    public static function update_order_status(){
+        global $wpdb;
+        
+        $page = ( isset($_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : false;
+        if( 'manage-eap_order' != $page ) return;
+        
+        if(isset($_REQUEST['action'])){
+            if(isset($_POST['action'])){
+                if(!isset($_POST['orders'])) return;
+                $action = $_POST['action'];
+                foreach($_POST['orders'] as $order_id){
+                    switch($action){
+                        case 'delete': /** rcl_delete_order($order_id) */; break;
+                        default: Eap_Order::updateOrderStatusDB($order_id,$action, $wpdb, EAP_PREF);
+                    }
+                }
+                wp_redirect($_POST['_wp_http_referer']);exit;                
+            }
+            if(isset($_GET['action'])){
+                switch($_GET['action']){
+                    case 'update_status': return Eap_Order::updateOrderStatusDB($_REQUEST['order'],$_REQUEST['status'],$wpdb, EAP_PREF);
+                    case 'delete': return null; /** rcl_delete_order($_REQUEST['order']); */
+                }
+                
+                return;
+            }
+            
+	}
+    }    
+
+    
     function get_data(){
         
         global $wpdb;

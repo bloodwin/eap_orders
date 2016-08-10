@@ -74,7 +74,18 @@ class Eap_Order {
         
         return $order;
     }
-
+    
+    public static function updateOrderStatusDB($order_id, $status, $db, $prefix) {
+        if (is_int($status)) {
+            $status = Eap_Order_Statuses::getStatusName($status);
+        }
+        $query = "UPDATE ".$prefix."orders SET status = %\s, status_date = NOW() where order_id=%\d";
+        $sql = $db->prepare($query, $status, $order_id);
+        
+        echo "SQL: = $sql\n";
+        // $res = $db->query($sql);
+    }
+                
     function getUserId() {
         return $this->user_id;
     }
