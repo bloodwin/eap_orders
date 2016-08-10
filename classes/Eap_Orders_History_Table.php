@@ -159,7 +159,7 @@ class Eap_Orders_History_Table extends WP_List_Table {
         $m = isset( $_GET['m'] ) ? $_GET['m'] : 0;
         $status = isset( $_GET['sts'] ) ? $_GET['sts'] : 0; ?>
         <label for="filter-by-status" class="screen-reader-text"><?php _e( 'Filter by date' ); ?></label>
-        <?php $sts = eap_order_statuses(); ?>
+        <?php $sts = Eap_Order_Statuses::getInstance(); ?>
         <select name="sts" id="filter-by-status">
             <option<?php selected( $status, 0 ); ?> value="0"><?php _e( 'All', 'wp-recall' ); ?></option>
             <?php foreach ( $sts as $id=>$name ) {
