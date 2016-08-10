@@ -70,7 +70,7 @@ class Eap_Orders_History {
         }
 
         if($wheres){ $where = implode(' AND ',$wheres); }
-        if($where) { $sql .= " AND ".$where; }
+        if($where) { $sql .= $where; }
 
         $orderby = (isset($args['orderby']))? " ORDER BY ".$args['orderby']:" ORDER BY ID";
         $sql_order = (isset($args['order']))? $args['order']:" DESC";
