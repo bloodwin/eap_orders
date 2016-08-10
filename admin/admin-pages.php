@@ -4,13 +4,14 @@ include_once 'orders-history.php';
 function wp_eap_orders_options_panel(){
     add_menu_page('EAP Orders', 'EAP Orders', 'manage_options', 'manage-eap', 'eap_manage_orders');
     $hook = add_submenu_page( 'manage-eap', __('Orders','wp-recall'), __('Orders','wp-recall'), 'manage_options', 'manage-eap', 'eap_manage_orders');
-        add_action( "load-$hook", 'eap_orders_page_options' );
+    add_action( "load-$hook", 'eap_orders_page_options' );
     add_submenu_page( 'manage-eap', __('Export/Import','wp-recall'), __('Export/Import','wp-recall'), 'manage_options', 'manage-eap-price', 'eap_export');
     add_submenu_page( 'manage-eap', __('Store settings','wp-recall'), __('Store settings','wp-recall'), 'manage_options', 'manage-eap-options', 'eap_global_options');
 }
 add_action('admin_menu', 'wp_eap_orders_options_panel',20);
 
 add_filter('admin_options_eap','eap_primary_options',5);
+
 function eap_primary_options($content){
     global $rcl_options;
     $rcl_options = get_option('primary-eap-options');
@@ -23,17 +24,14 @@ function eap_primary_options($content){
                 $opt->option_block(
                     array(
                         $opt->title(__('General settings','wp-recall')),
-
                         $opt->label(__('Email Notification','wp-recall')),
                         $opt->option('email',array('name'=>'admin_email_magazin_recall')),
                         $opt->notice(__('If email is not specified, a notification will be sent to all users of the website with the rights of the "Administrator"','wp-recall')),
-
                     )
                 ),
                 $opt->option_block(
                     array(
                         $opt->title(__('Temp settings area','wp-recall')),
-
                         $opt->label(__('Temp settings','wp-recall')),
                         $opt->option('select',array(
                             'name'=>'temp_setting',
@@ -80,17 +78,13 @@ function eap_manage_orders(){
 
     $n=0;
     $s=0;
-#    if($_GET['remove-trash']==101&&wp_verify_nonce( $_GET['_wpnonce'], 'delete-trash-eap'))
-#            $wpdb->query($wpdb->prepare("DELETE FROM ".EAP_PREF ."orders_history WHERE order_status = '%d'",6));
 
     if(isset($_GET['action'])&&$_GET['action']=='order-details'){
     
         echo '<h2>'.__('EAP order management','wp-recall').'</h2>
             <div style="width:1050px">';
 
-    global $eap_order,$eap_product;
-
-    $order = eap_get_order($_GET['order']);
+    $order = Eap_Order::getInstance($_GET['order'], $wpdb, EAP_PREF);
 
     if($_POST['submit_message']){
         if($_POST['email_author']) $email_author = sanitize_email($_POST['email_author']);
@@ -118,22 +112,22 @@ function eap_manage_orders(){
 
     echo '</tr>';
 
-    foreach($order->products as $product){
+    foreach($order->getBasket() as $product){
         $n++;
-        $user_login = get_the_author_meta('user_login',$product->user_id);
+        $user_login = get_the_author_meta('user_login',$order->getUserId());
         echo '<tr>'
             . '<td>'.$n.'</td>'
-            . '<td>'.$product->product_name.'</td>'
-            . '<td>'.$product->product_price.'</td>'
-            . '<td>'.$product->items_count.'</td>'
-            . '<td>'.$product->summ_price.'</td>'
-            . '<td>'.$product->order_status.'</td>'
+            . '<td>'.$product->getProductName().'</td>'
+            . '<td>'.$product->getProductPrice().'</td>'
+            . '<td>'.$product->getProductAmount().'</td>'
+            . '<td>'.$product->getProductTotalPrice().'</td>'
+            . '<td>'.$order->getStatus().'</td>'
         . '</tr>';
 
     }
     echo '<tr>
                     <td colspan="4">'.__('Sum order','wp-recall').'</td>
-                    <td colspan="2">'.$eap_order->order_price.'</td>
+                    <td colspan="2">'.$order->getTotalPrice().'</td>
         </tr>
     </table>';
 
@@ -142,7 +136,7 @@ function eap_manage_orders(){
     $cf = new Rcl_Custom_Fields();
 
     foreach((array)$get_fields as $custom_field){
-            $meta = get_the_author_meta($custom_field['slug'],$order->order_author);
+            $meta = get_the_author_meta($custom_field['slug'],$order->getUserId());
             $show_custom_field .= $cf->get_field_value($custom_field,$meta);
     }
 
@@ -152,10 +146,10 @@ function eap_manage_orders(){
                 . '<div style="text-align:right;">'
                     . '<a href="'.admin_url('admin.php?page=manage-eap').'">'.__('Show all orders','wp-recall').'</a>
                 </div>
-    <h3>'.__('All orders user','wp-recall').': <a href="'.admin_url('admin.php?page=manage-eap&user='.$order->order_author).'">'.$user_login.'</a></h3>
+    <h3>'.__('All orders user','wp-recall').': <a href="'.admin_url('admin.php?page=manage-eap&user='.$order->getUserId()).'">'.$user_login.'</a></h3>
     <h3>'.__('Information about the user','wp-recall').':</h3>'
-                . '<p><b>'.__('Name','wp-recall').'</b>: '.get_the_author_meta('display_name',$order->order_author).'</p>'
-                . '<p><b>'.__('Email','wp-recall').'</b>: '.get_the_author_meta('user_email',$order->order_author).'</p>'.$show_custom_field;
+                . '<p><b>'.__('Name','wp-recall').'</b>: '.get_the_author_meta('display_name',$order->getUserId()).'</p>'
+                . '<p><b>'.__('Email','wp-recall').'</b>: '.get_the_author_meta('user_email',$order->getUserId()).'</p>'.$show_custom_field;
     #if($details_order) echo '<h3>'.__('Order details','wp-recall').':</h3>'.$details_order;
 
     echo '</div>';//конец блока заказов

@@ -5,7 +5,7 @@ if (!session_id()) { session_start(); }
 require_once("functions.php");
 
 if(is_admin()):
-    require_once("admin-pages.php");
+    require_once("admin/admin-pages.php");
 else:
     add_action('rcl_enqueue_scripts','rcl_eap_scripts',10);
 endif;
