@@ -127,7 +127,7 @@ class Eap_Orders_History_Table extends WP_List_Table {
             'all-orders'    => sprintf('<a href="?page=%s&action=%s&user=%s">'.__( 'Get user orders', 'wp-recall' ).'</a>',$_REQUEST['page'],
                                         'all-orders',$item->getUserId()),
         );
-        return sprintf('%1$s %2$s', , $this->row_actions($actions) );
+        return sprintf('%1$s %2$s', $item->userdata->getFIO(), $this->row_actions($actions) );
     }
 
     function get_bulk_actions() {
