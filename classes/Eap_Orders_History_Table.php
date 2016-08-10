@@ -199,8 +199,7 @@ class Eap_Orders_History_Table extends WP_List_Table {
             $args['year'] = substr($_GET['m'],0,4);
             $args['month'] = substr($_GET['m'],5,6);
 
-            if($_GET['sts']) $args['order_status'] = intval($_GET['sts']);
-
+            if ($_GET['sts']) { $args['order_status'] = intval($_GET['sts']); }
         }else{
             if($_GET['sts']){
                 $args['status'] = intval($_GET['sts']);
@@ -218,7 +217,7 @@ class Eap_Orders_History_Table extends WP_List_Table {
         $args['per_page'] = $this->per_page;
         $args['offset'] = $this->offset;
         
-        $orders = Eap_Orders_History::getHistoryByArgs(&$wpdb, EAP_PREF, $args);
+        $orders = Eap_Orders_History::getHistoryByArgs($wpdb, EAP_PREF, $args);
         
         if(!$orders) { return false; }
         
