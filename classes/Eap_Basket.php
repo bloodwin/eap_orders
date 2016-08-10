@@ -12,11 +12,11 @@ class Eap_Basket {
     }        
     
     public function getTotalCount() {
-        $this->total_count;        
+        return $this->total_count;        
     }
     
     public function getBasket() {
-        $this->basket;
+        return $this->basket;
     }
 
     public function addToBasket (Eap_Basket_Line $line) {

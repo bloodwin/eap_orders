@@ -88,7 +88,8 @@ class Eap_Orders_History_Table extends WP_List_Table {
         );
       return sprintf('%1$s %2$s', $item->getOrderId(), $this->row_actions($actions) );
     }
-    
+
+/**    
     function column_status(Eap_Order $item){
         $status = Eap_Order_Statuses::getInstance();
         $actions = array(
@@ -119,13 +120,14 @@ class Eap_Orders_History_Table extends WP_List_Table {
       
         return sprintf('%1$s %2$s', $item->getStatus(), $this->row_actions($actions) );
     }
-    
+*/
+
     function column_user_id(Eap_Order $item){
         $actions = array(
             'all-orders'    => sprintf('<a href="?page=%s&action=%s&user=%s">'.__( 'Get user orders', 'wp-recall' ).'</a>',$_REQUEST['page'],
                                         'all-orders',$item->getUserId()),
         );
-        return sprintf('%1$s %2$s', $item->getUserId().': '.get_the_author_meta('user_login',$item->getUserId()), $this->row_actions($actions) );
+        return sprintf('%1$s %2$s', , $this->row_actions($actions) );
     }
 
     function get_bulk_actions() {
