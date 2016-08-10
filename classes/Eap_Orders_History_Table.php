@@ -121,17 +121,17 @@ class Eap_Orders_History_Table extends WP_List_Table {
     }
     
     function column_user_id(Eap_Order $item){
-      $actions = array(
+        $actions = array(
             'all-orders'    => sprintf('<a href="?page=%s&action=%s&user=%s">'.__( 'Get user orders', 'wp-recall' ).'</a>',$_REQUEST['page'],
                                         'all-orders',$item->getUserId()),
         );
-      return sprintf('%1$s %2$s', $item->getUserId().': '.get_the_author_meta('user_login',$item->getUserId()), $this->row_actions($actions) );
+        return sprintf('%1$s %2$s', $item->getUserId().': '.get_the_author_meta('user_login',$item->getUserId()), $this->row_actions($actions) );
     }
 
     function get_bulk_actions() {
-      $actions = Eap_Orders_Statuses::getInstance();
-      $actions['delete'] = __( 'Delete', 'wp-recall' );
-      return $actions;
+        $actions = Eap_Order_Statuses::getInstance();
+        $actions['delete'] = __( 'Delete', 'wp-recall' );
+        return $actions;
     }
 
     function column_cb(Eap_Order $item) {
