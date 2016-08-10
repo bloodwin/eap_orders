@@ -1,9 +1,5 @@
 <?php
 
-if( ! class_exists( 'WP_List_Table' ) ) {
-    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-}
-
 add_action('admin_init',array('Eap_Orders_History_Table','update_order_status'));
 
 function eap_orders_page_options() {

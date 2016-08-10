@@ -6,6 +6,10 @@
  * and open the template in the editor.
  */
 
+if( ! class_exists( 'WP_List_Table' ) ) {
+    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
+
 class Eap_Orders_History_Table extends WP_List_Table {
     
     var $per_page = 50;
