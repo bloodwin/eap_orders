@@ -267,7 +267,10 @@ class Eap_Orders_History_Table extends WP_List_Table {
     function prepare_items() {
         
         $data = $this->get_data();
-        $this->_column_headers = $this->get_column_info();
+        $columns = $this->get_columns();
+        $sortable = array();
+        $hidden = array();
+        $this->_column_headers = array($columns, $hidden, $sortable);
         $this->set_pagination_args( array(
             'total_items' => $this->total_items,
             'per_page'    => $this->per_page
