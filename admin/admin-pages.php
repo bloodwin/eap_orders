@@ -149,7 +149,10 @@ function eap_manage_orders(){
     <h3>'.__('All orders user','wp-recall').': <a href="'.admin_url('admin.php?page=manage-eap&user='.$order->getUserId()).'">'.$user_login.'</a></h3>
     <h3>'.__('Information about the user','wp-recall').':</h3>'
                 . '<p><b>'.__('Name','wp-recall').'</b>: '.$order->getUserdata()->getFIO().'</p>'
-                . '<p><b>'.__('Email','wp-recall').'</b>: '.$order->getUserdata()->getEmail().'</p>'.$show_custom_field;
+                . '<p><b>'.__('Email','wp-recall').'</b>: '.$order->getUserdata()->getEmail().'</p>'
+                . '<p><b>'.__('Phone','wp-recall').'</b>: '.$order->getUserdata()->getPhone().'</p>'
+                . '<p><b>'.__('Address','wp-recall').'</b>: '.$order->getUserdata()->getFullAddress().'</p>'
+                .$show_custom_field;
     #if($details_order) echo '<h3>'.__('Order details','wp-recall').':</h3>'.$details_order;
 
     echo '</div>';//конец блока заказов
