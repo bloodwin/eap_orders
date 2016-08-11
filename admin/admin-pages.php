@@ -84,7 +84,6 @@ function eap_manage_orders(){
             <div style="width:1050px">';
 
     $order = Eap_Order::getInstance($_GET['order'], $wpdb, EAP_PREF);
-    vardump($order, "ORDER:");
 
     if($_POST['submit_message']){
         if($_POST['email_author']) $email_author = sanitize_email($_POST['email_author']);
@@ -111,8 +110,9 @@ function eap_manage_orders(){
     }
 
     echo '</tr>';
-
-    foreach($order->getBasket() as $product){
+    
+    $basket = $order->getBasket()->getBasket();
+    foreach($basket as $product){
         $n++;
         $user_login = get_the_author_meta('user_login',$order->getUserId());
         echo '<tr>'
@@ -148,8 +148,8 @@ function eap_manage_orders(){
                 </div>
     <h3>'.__('All orders user','wp-recall').': <a href="'.admin_url('admin.php?page=manage-eap&user='.$order->getUserId()).'">'.$user_login.'</a></h3>
     <h3>'.__('Information about the user','wp-recall').':</h3>'
-                . '<p><b>'.__('Name','wp-recall').'</b>: '.get_the_author_meta('display_name',$order->getUserId()).'</p>'
-                . '<p><b>'.__('Email','wp-recall').'</b>: '.get_the_author_meta('user_email',$order->getUserId()).'</p>'.$show_custom_field;
+                . '<p><b>'.__('Name','wp-recall').'</b>: '.$order->getUserdata()->getFIO().'</p>'
+                . '<p><b>'.__('Email','wp-recall').'</b>: '.$order->getUserdata()->getEmail().'</p>'.$show_custom_field;
     #if($details_order) echo '<h3>'.__('Order details','wp-recall').':</h3>'.$details_order;
 
     echo '</div>';//конец блока заказов
