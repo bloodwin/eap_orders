@@ -77,7 +77,6 @@ function eap_manage_orders(){
     global $wpdb;
 
     $n=0;
-    $s=0;
 
     if(isset($_GET['action'])&&$_GET['action']=='order-details'){
     
@@ -85,6 +84,7 @@ function eap_manage_orders(){
             <div style="width:1050px">';
 
     $order = Eap_Order::getInstance($_GET['order'], $wpdb, EAP_PREF);
+    vardump($order, "ORDER:");
 
     if($_POST['submit_message']){
         if($_POST['email_author']) $email_author = sanitize_email($_POST['email_author']);
